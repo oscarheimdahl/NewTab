@@ -1,0 +1,38 @@
+const clock = document.getElementById('clock');
+
+let stop = false;
+let dirToggle = false;
+
+setTimeout(() => {
+  clock.style.opacity = 1;
+}, 200);
+
+clock.innerHTML = formattedCurrentTime();
+setInterval(() => {
+  clock.innerHTML = formattedCurrentTime();
+}, 1000);
+
+function formattedCurrentTime() {
+  const now = new Date();
+  const h = shift0(now.getHours());
+  const m = shift0(now.getMinutes());
+  const s = shift0(now.getSeconds());
+  if (!stop) move(s);
+  return `${h}:${m}:${s}`;
+}
+
+function shift0(digit) {
+  if (digit < 10) digit = '0' + digit;
+  return digit;
+}
+
+function move(seconds) {
+  const maxTop = window.innerHeight - 300;
+  const mappedTop = (seconds / 60) * maxTop;
+  if (dirToggle) clock.style.top = mappedTop + 'px';
+  else clock.style.top = maxTop - mappedTop + 'px';
+
+  if (seconds == 59) dirToggle = !dirToggle;
+}
+
+document.addEventListener('keydown', () => (stop = !stop));
