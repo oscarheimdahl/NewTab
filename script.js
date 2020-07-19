@@ -1,24 +1,26 @@
 const clock = document.getElementById('clock');
-
 let stop = false;
 let dirToggle = false;
+document.addEventListener('keydown', () => (stop = !stop));
 
-setTimeout(() => {
-  clock.style.opacity = 1;
-}, 200);
+(function init() {
+  setTimeout(() => (clock.style.opacity = 1), 200);
+  updateClock();
+  setInterval(updateClock, 1000);
+})();
 
-clock.innerHTML = formattedCurrentTime();
-setInterval(() => {
-  clock.innerHTML = formattedCurrentTime();
-}, 1000);
+function updateClock() {
+  const time = formattedCurrentTime();
+  clock.innerHTML = `${time.h}:${time.m}:${time.s}`;
+  if (!stop) move(time.s);
+}
 
 function formattedCurrentTime() {
   const now = new Date();
   const h = shift0(now.getHours());
   const m = shift0(now.getMinutes());
   const s = shift0(now.getSeconds());
-  if (!stop) move(s);
-  return `${h}:${m}:${s}`;
+  return { h, m, s };
 }
 
 function shift0(digit) {
@@ -34,5 +36,3 @@ function move(seconds) {
 
   if (seconds == 59) dirToggle = !dirToggle;
 }
-
-document.addEventListener('keydown', () => (stop = !stop));
